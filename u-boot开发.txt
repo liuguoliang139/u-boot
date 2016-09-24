@@ -42,6 +42,7 @@ BootLoader的结构和启动过程
 						这点也不是必需的, 对于Nor Flash等存储设备, 完全可以在上面直接执行代码, 只不多相比在RAM中执行效率大为降低.
 					▶设置好堆栈;
 					▶跳转到第二阶段的C入口点;
+					
 			(2) 第二阶段: 通常使用C语言来实现, 这样可以实现更复杂的功能, 而且代码会有更好的可读性和可移植性.
 				BootLoader第二阶段的功能
 					▶初始化本阶段用使用到的硬件设备;
@@ -69,6 +70,7 @@ BootLoader的结构和启动过程
 							void (*theKernel) (int zero, int arch, u32 params_addr) = (void (*) (int, int, u32))KERNEL_RAM_BASE;
 							...
 							theKernel (0, ARCH_NUMBER, (u32)kernel_params_start;
+							
 			为了开发方便, 至少要初始化一个串口以便程序员和BootLoader进行交互.
 			
 		
