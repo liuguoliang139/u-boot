@@ -1,31 +1,70 @@
 BootLoader与内核的交互
+
 	BootLoader和内核的交互是单向的, BootLoader将各类参数传给内核. 由于它们不能同时运行, 所以传递办法只有一个: BootLoader将参数放在某个约定的地点, 再启动内核, 内核启动后从这地方获得参数.
 
 	除了约定好参数存放的地址外, 还要规定参数的结构.
 	linux2.4.x以后的内核都期望以标记列表(tagged list)的形式来传递启动参数.  标记, 就是一种数据结构; 标记列表, 就是挨着存放的多个标记. 标记列表以标记ATAG_CORE开始, 以标记ATAG_NONE结束.
 	标记的数据结构为tag, 由一个tag_header结构和一个联合union组成:
+	
 		include/asm/setup.h:
 		struct tag_header {  /* 表示标记的类型和长度 */
-			u32	size;	//类型, 比如表示的是内存还是表示命令行参数等
-			u32	tag;	//长度
+			u32	size;	//长度
+			u32	tag;	//类型, 比如表示的是内存还是表示命令行参数等
 		}
 		struct tag {
 			struct tag_header hdr;
 			union {	//表示不同类型标记使用不同的联合union
-				struct tag_core			core;
+				struct tag_core				core;
 				struct tag_mem32		mem;			//表示内存
-				struct tag_videotext	videotext;
+				struct tag_videotext		videotext;
 				struct tag_ramdisk		ramdisk;
 				struct tag_initrd			initrd;
 				struct tag_serialnr		serialnr;
 				struct tag_revision		revision;
-				struct tag_videolfb	videolfb;
-				struct tag_cmdline		cmdline;		//表示命令行
-				
+				struct tag_videolfb		videolfb;
+				struct tag_cmdline		cmdline;		//表示命令行		
 				/*	Acorn specific */
 				struct tag_acorn 		acorn;
 				/* DC21285 */
 				struct tag_memclk		memclk;
 			}
 		}
+	
+	? 设置内存标记, 命令行标记为例说明:
+		标记列表从STAG_CORE开始, 假设BootLoader与内核约定的参数存放地址为0x 3000 0000. 则可以以如下代码设置ATAG_CODE:
+			params = (struct tag*)0x3000 0000;
+			params->hdr.tag = STAG_CORE;				//标记的类型,  标记列表以标记ATAG_CORE开始
+			params->hdr.size = tag_size(tag_core);	//标记的长度
+			params->u.core.flags = 0;
+			params->u.core.pagesize = 0;
+			params->u.core.rootdev =  0;
+			其中, tag_next定义如下, 它指向当前标记的末尾:
+			#define tag_next(t)      (struct tag*)( (u32*)(t) + (t)->hdr.size() )
+			
+			
+	? 设置内存标记:
+		假设开发板使用的内存起始地址为0x3000 0000, 大小为0x400 0000, 则内存标记可以如下设置:
+			params->hdr.tag = ATAG_CORE;					//标记的类型, 标记列表以标记ATAG_CORE开始
+			params->hdr.size = tag_size(tag_mem32);	//标记内存的大小
+			params->u_mem_start = 0x3000 0000;
+			params->u_mem_size = 0x400 0000;
+			params = tag.next(params);
+			
+			
+	? 设置命令行标记:
+		命令行就是一个字符串, 它被用来控制内核的一些行为. 比如" root=/dev/mtdblock 2 init=/linuxrc console=ttySAC0"表示根文件系统在MTD2分区上, 系统启动后执行的第一个程序是linuxrc, 控制台为ttySAC0(第一个串口).
+		
+		命令行可以在BootLoader中通过命令设置好, 然后按如下构造标记传递给内核:
+		char* p = "root=/dev/mtdblock 2 init=/linuxrc console=ttySAC0";
+		params->hdr.tag = ATAG_CORE;
+		params->size = (sizeof(struct tag_header)+strlen(p)+1+4) >> 2;
+		strcpy(params->u.cmdline.cmdline, p);
+		params = tag_next(params);
+		
+		
+	? 设置标记ATAG_NONE
+		标记列表以标记ATAG_NONE结束, 如下:
+		params->hdr.tag = ATAG_NONE;
+		params->hdr.size(0);
+	
 	
