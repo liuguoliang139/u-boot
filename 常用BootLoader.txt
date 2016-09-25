@@ -1,0 +1,2 @@
+现在的BootLoader种类繁多, 比如x86上有LIL0, GRUB等.
+对于ARM架构的CPU, 有u-boot, vivi等.
