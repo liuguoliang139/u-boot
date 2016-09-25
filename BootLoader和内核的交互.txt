@@ -1,28 +1,28 @@
-BootLoaderÓëÄÚºËµÄ½»»¥
+ï»¿BootLoaderä¸Žå†…æ ¸çš„äº¤äº’
 
-	BootLoaderºÍÄÚºËµÄ½»»¥ÊÇµ¥ÏòµÄ, BootLoader½«¸÷Àà²ÎÊý´«¸øÄÚºË. ÓÉÓÚËüÃÇ²»ÄÜÍ¬Ê±ÔËÐÐ, ËùÒÔ´«µÝ°ì·¨Ö»ÓÐÒ»¸ö: BootLoader½«²ÎÊý·ÅÔÚÄ³¸öÔ¼¶¨µÄµØµã, ÔÙÆô¶¯ÄÚºË, ÄÚºËÆô¶¯ºó´ÓÕâµØ·½»ñµÃ²ÎÊý.
+	BootLoaderå’Œå†…æ ¸çš„äº¤äº’æ˜¯å•å‘çš„, BootLoaderå°†å„ç±»å‚æ•°ä¼ ç»™å†…æ ¸. ç”±äºŽå®ƒä»¬ä¸èƒ½åŒæ—¶è¿è¡Œ, æ‰€ä»¥ä¼ é€’åŠžæ³•åªæœ‰ä¸€ä¸ª: BootLoaderå°†å‚æ•°æ”¾åœ¨æŸä¸ªçº¦å®šçš„åœ°ç‚¹, å†å¯åŠ¨å†…æ ¸, å†…æ ¸å¯åŠ¨åŽä»Žè¿™åœ°æ–¹èŽ·å¾—å‚æ•°.
 
-	³ýÁËÔ¼¶¨ºÃ²ÎÊý´æ·ÅµÄµØÖ·Íâ, »¹Òª¹æ¶¨²ÎÊýµÄ½á¹¹.
-	linux2.4.xÒÔºóµÄÄÚºË¶¼ÆÚÍûÒÔ±ê¼ÇÁÐ±í(tagged list)µÄÐÎÊ½À´´«µÝÆô¶¯²ÎÊý.  ±ê¼Ç, ¾ÍÊÇÒ»ÖÖÊý¾Ý½á¹¹; ±ê¼ÇÁÐ±í, ¾ÍÊÇ°¤×Å´æ·ÅµÄ¶à¸ö±ê¼Ç. ±ê¼ÇÁÐ±íÒÔ±ê¼ÇATAG_CORE¿ªÊ¼, ÒÔ±ê¼ÇATAG_NONE½áÊø.
-	±ê¼ÇµÄÊý¾Ý½á¹¹Îªtag, ÓÉÒ»¸ötag_header½á¹¹ºÍÒ»¸öÁªºÏunion×é³É:
+	é™¤äº†çº¦å®šå¥½å‚æ•°å­˜æ”¾çš„åœ°å€å¤–, è¿˜è¦è§„å®šå‚æ•°çš„ç»“æž„.
+	linux2.4.xä»¥åŽçš„å†…æ ¸éƒ½æœŸæœ›ä»¥æ ‡è®°åˆ—è¡¨(tagged list)çš„å½¢å¼æ¥ä¼ é€’å¯åŠ¨å‚æ•°.  æ ‡è®°, å°±æ˜¯ä¸€ç§æ•°æ®ç»“æž„; æ ‡è®°åˆ—è¡¨, å°±æ˜¯æŒ¨ç€å­˜æ”¾çš„å¤šä¸ªæ ‡è®°. æ ‡è®°åˆ—è¡¨ä»¥æ ‡è®°ATAG_COREå¼€å§‹, ä»¥æ ‡è®°ATAG_NONEç»“æŸ.
+	æ ‡è®°çš„æ•°æ®ç»“æž„ä¸ºtag, ç”±ä¸€ä¸ªtag_headerç»“æž„å’Œä¸€ä¸ªè”åˆunionç»„æˆ:
 	
 		include/asm/setup.h:
-		struct tag_header {  /* ±íÊ¾±ê¼ÇµÄÀàÐÍºÍ³¤¶È */
-			u32	size;	//³¤¶È
-			u32	tag;	//ÀàÐÍ, ±ÈÈç±íÊ¾µÄÊÇÄÚ´æ»¹ÊÇ±íÊ¾ÃüÁîÐÐ²ÎÊýµÈ
+		struct tag_header {  /* è¡¨ç¤ºæ ‡è®°çš„ç±»åž‹å’Œé•¿åº¦ */
+			u32	size;	//é•¿åº¦
+			u32	tag;	//ç±»åž‹, æ¯”å¦‚è¡¨ç¤ºçš„æ˜¯å†…å­˜è¿˜æ˜¯è¡¨ç¤ºå‘½ä»¤è¡Œå‚æ•°ç­‰
 		}
 		struct tag {
 			struct tag_header hdr;
-			union {	//±íÊ¾²»Í¬ÀàÐÍ±ê¼ÇÊ¹ÓÃ²»Í¬µÄÁªºÏunion
+			union {	//è¡¨ç¤ºä¸åŒç±»åž‹æ ‡è®°ä½¿ç”¨ä¸åŒçš„è”åˆunion
 				struct tag_core				core;
-				struct tag_mem32		mem;			//±íÊ¾ÄÚ´æ
+				struct tag_mem32		mem;			//è¡¨ç¤ºå†…å­˜
 				struct tag_videotext		videotext;
 				struct tag_ramdisk		ramdisk;
 				struct tag_initrd			initrd;
 				struct tag_serialnr		serialnr;
 				struct tag_revision		revision;
 				struct tag_videolfb		videolfb;
-				struct tag_cmdline		cmdline;		//±íÊ¾ÃüÁîÐÐ		
+				struct tag_cmdline		cmdline;		//è¡¨ç¤ºå‘½ä»¤è¡Œ		
 				/*	Acorn specific */
 				struct tag_acorn 		acorn;
 				/* DC21285 */
@@ -30,40 +30,39 @@ BootLoaderÓëÄÚºËµÄ½»»¥
 			}
 		}
 	
-	? ÉèÖÃÄÚ´æ±ê¼Ç, ÃüÁîÐÐ±ê¼ÇÎªÀýËµÃ÷:
-		±ê¼ÇÁÐ±í´ÓSTAG_CORE¿ªÊ¼, ¼ÙÉèBootLoaderÓëÄÚºËÔ¼¶¨µÄ²ÎÊý´æ·ÅµØÖ·Îª0x 3000 0000. Ôò¿ÉÒÔÒÔÈçÏÂ´úÂëÉèÖÃATAG_CODE:
+	â–¶ è®¾ç½®å†…å­˜æ ‡è®°, å‘½ä»¤è¡Œæ ‡è®°ä¸ºä¾‹è¯´æ˜Ž:
+		æ ‡è®°åˆ—è¡¨ä»ŽSTAG_COREå¼€å§‹, å‡è®¾BootLoaderä¸Žå†…æ ¸çº¦å®šçš„å‚æ•°å­˜æ”¾åœ°å€ä¸º0x 3000 0000. åˆ™å¯ä»¥ä»¥å¦‚ä¸‹ä»£ç è®¾ç½®ATAG_CODE:
 			params = (struct tag*)0x3000 0000;
-			params->hdr.tag = STAG_CORE;				//±ê¼ÇµÄÀàÐÍ,  ±ê¼ÇÁÐ±íÒÔ±ê¼ÇATAG_CORE¿ªÊ¼
-			params->hdr.size = tag_size(tag_core);	//±ê¼ÇµÄ³¤¶È
+			params->hdr.tag = STAG_CORE;				//æ ‡è®°çš„ç±»åž‹,  æ ‡è®°åˆ—è¡¨ä»¥æ ‡è®°ATAG_COREå¼€å§‹
+			params->hdr.size = tag_size(tag_core);	//æ ‡è®°çš„é•¿åº¦
 			params->u.core.flags = 0;
 			params->u.core.pagesize = 0;
 			params->u.core.rootdev =  0;
-			ÆäÖÐ, tag_next¶¨ÒåÈçÏÂ, ËüÖ¸Ïòµ±Ç°±ê¼ÇµÄÄ©Î²:
+			å…¶ä¸­, tag_nextå®šä¹‰å¦‚ä¸‹, å®ƒæŒ‡å‘å½“å‰æ ‡è®°çš„æœ«å°¾:
 			#define tag_next(t)      (struct tag*)( (u32*)(t) + (t)->hdr.size() )
 			
 			
-	? ÉèÖÃÄÚ´æ±ê¼Ç:
-		¼ÙÉè¿ª·¢°åÊ¹ÓÃµÄÄÚ´æÆðÊ¼µØÖ·Îª0x3000 0000, ´óÐ¡Îª0x400 0000, ÔòÄÚ´æ±ê¼Ç¿ÉÒÔÈçÏÂÉèÖÃ:
-			params->hdr.tag = ATAG_CORE;					//±ê¼ÇµÄÀàÐÍ, ±ê¼ÇÁÐ±íÒÔ±ê¼ÇATAG_CORE¿ªÊ¼
-			params->hdr.size = tag_size(tag_mem32);	//±ê¼ÇÄÚ´æµÄ´óÐ¡
+	â–¶ è®¾ç½®å†…å­˜æ ‡è®°:
+		å‡è®¾å¼€å‘æ¿ä½¿ç”¨çš„å†…å­˜èµ·å§‹åœ°å€ä¸º0x3000 0000, å¤§å°ä¸º0x400 0000, åˆ™å†…å­˜æ ‡è®°å¯ä»¥å¦‚ä¸‹è®¾ç½®:
+			params->hdr.tag = ATAG_CORE;					//æ ‡è®°çš„ç±»åž‹, æ ‡è®°åˆ—è¡¨ä»¥æ ‡è®°ATAG_COREå¼€å§‹
+			params->hdr.size = tag_size(tag_mem32);	//æ ‡è®°å†…å­˜çš„å¤§å°
 			params->u_mem_start = 0x3000 0000;
 			params->u_mem_size = 0x400 0000;
 			params = tag.next(params);
 			
 			
-	? ÉèÖÃÃüÁîÐÐ±ê¼Ç:
-		ÃüÁîÐÐ¾ÍÊÇÒ»¸ö×Ö·û´®, Ëü±»ÓÃÀ´¿ØÖÆÄÚºËµÄÒ»Ð©ÐÐÎª. ±ÈÈç" root=/dev/mtdblock 2 init=/linuxrc console=ttySAC0"±íÊ¾¸ùÎÄ¼þÏµÍ³ÔÚMTD2·ÖÇøÉÏ, ÏµÍ³Æô¶¯ºóÖ´ÐÐµÄµÚÒ»¸ö³ÌÐòÊÇlinuxrc, ¿ØÖÆÌ¨ÎªttySAC0(µÚÒ»¸ö´®¿Ú).
+	â–¶ è®¾ç½®å‘½ä»¤è¡Œæ ‡è®°:
+		å‘½ä»¤è¡Œå°±æ˜¯ä¸€ä¸ªå­—ç¬¦ä¸², å®ƒè¢«ç”¨æ¥æŽ§åˆ¶å†…æ ¸çš„ä¸€äº›è¡Œä¸º. æ¯”å¦‚" root=/dev/mtdblock 2 init=/linuxrc console=ttySAC0"è¡¨ç¤ºæ ¹æ–‡ä»¶ç³»ç»Ÿåœ¨MTD2åˆ†åŒºä¸Š, ç³»ç»Ÿå¯åŠ¨åŽæ‰§è¡Œçš„ç¬¬ä¸€ä¸ªç¨‹åºæ˜¯linuxrc, æŽ§åˆ¶å°ä¸ºttySAC0(ç¬¬ä¸€ä¸ªä¸²å£).
 		
-		ÃüÁîÐÐ¿ÉÒÔÔÚBootLoaderÖÐÍ¨¹ýÃüÁîÉèÖÃºÃ, È»ºó°´ÈçÏÂ¹¹Ôì±ê¼Ç´«µÝ¸øÄÚºË:
+		å‘½ä»¤è¡Œå¯ä»¥åœ¨BootLoaderä¸­é€šè¿‡å‘½ä»¤è®¾ç½®å¥½, ç„¶åŽæŒ‰å¦‚ä¸‹æž„é€ æ ‡è®°ä¼ é€’ç»™å†…æ ¸:
 		char* p = "root=/dev/mtdblock 2 init=/linuxrc console=ttySAC0";
 		params->hdr.tag = ATAG_CORE;
 		params->size = (sizeof(struct tag_header)+strlen(p)+1+4) >> 2;
 		strcpy(params->u.cmdline.cmdline, p);
 		params = tag_next(params);
 		
-		
-	? ÉèÖÃ±ê¼ÇATAG_NONE
-		±ê¼ÇÁÐ±íÒÔ±ê¼ÇATAG_NONE½áÊø, ÈçÏÂ:
+	â–¶ è®¾ç½®æ ‡è®°ATAG_NONE
+		æ ‡è®°åˆ—è¡¨ä»¥æ ‡è®°ATAG_NONEç»“æŸ, å¦‚ä¸‹:
 		params->hdr.tag = ATAG_NONE;
 		params->hdr.size(0);
 	
